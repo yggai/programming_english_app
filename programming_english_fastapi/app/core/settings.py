@@ -1,17 +1,45 @@
-from pydantic_settings import BaseSettings
-from typing import Optional
+"""YAML配置设置模块"""
+from .config import (
+    APP_NAME,
+    APP_VERSION,
+    APP_DESCRIPTION,
+    DEBUG,
+    SERVER_HOST,
+    SERVER_PORT,
+    SERVER_RELOAD,
+    SERVER_LOG_LEVEL,
+    DATABASE_URL,
+    DATABASE_ECHO,
+    DATABASE_POOL_SIZE,
+    DATABASE_MAX_OVERFLOW,
+    SECRET_KEY,
+    ALGORITHM,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    CORS_ALLOW_ORIGINS,
+    CORS_ALLOW_CREDENTIALS,
+    CORS_ALLOW_METHODS,
+    CORS_ALLOW_HEADERS
+)
 
-
-class Settings(BaseSettings):
-    database_url: str = "sqlite:///./programming_english.db"
-    secret_key: str = "your-secret-key-here"
-    algorithm: str = "HS256"
-    access_token_expire_minutes: int = 30
-    environment: str = "development"
-    debug: bool = True
-    
-    class Config:
-        env_file = ".env"
-
-
-settings = Settings()
+# 导出所有配置项
+__all__ = [
+    'APP_NAME',
+    'APP_VERSION',
+    'APP_DESCRIPTION',
+    'DEBUG',
+    'SERVER_HOST',
+    'SERVER_PORT',
+    'SERVER_RELOAD',
+    'SERVER_LOG_LEVEL',
+    'DATABASE_URL',
+    'DATABASE_ECHO',
+    'DATABASE_POOL_SIZE',
+    'DATABASE_MAX_OVERFLOW',
+    'SECRET_KEY',
+    'ALGORITHM',
+    'ACCESS_TOKEN_EXPIRE_MINUTES',
+    'CORS_ALLOW_ORIGINS',
+    'CORS_ALLOW_CREDENTIALS',
+    'CORS_ALLOW_METHODS',
+    'CORS_ALLOW_HEADERS'
+]

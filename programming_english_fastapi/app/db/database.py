@@ -1,15 +1,16 @@
+"""数据库连接配置"""
 from sqlmodel import SQLModel, create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
-from ..core.config import settings
+from ..core.config import DATABASE_URL, DATABASE_ECHO
 
 # 同步数据库引擎（用于Alembic迁移）
-engine = create_engine(settings.database_url, echo=settings.debug)
+engine = create_engine(DATABASE_URL, echo=DATABASE_ECHO)
 
 # 异步数据库引擎
 async_engine = create_async_engine(
-    settings.database_url.replace("sqlite://", "sqlite+aiosqlite://"),
-    echo=settings.debug
+    DATABASE_URL.replace("sqlite://", "sqlite+aiosqlite://"),
+    echo=DATABASE_ECHO
 )
 
 
