@@ -11,6 +11,8 @@ Word _$WordFromJson(Map<String, dynamic> json) => Word(
   word: json['word'] as String,
   translation: json['translation'] as String,
   example: json['example'] as String,
+  difficulty: json['difficulty'] as String? ?? 'beginner',
+  definition: json['definition'] as String? ?? '',
 );
 
 Map<String, dynamic> _$WordToJson(Word instance) => <String, dynamic>{
@@ -18,6 +20,8 @@ Map<String, dynamic> _$WordToJson(Word instance) => <String, dynamic>{
   'word': instance.word,
   'translation': instance.translation,
   'example': instance.example,
+  'difficulty': instance.difficulty,
+  'definition': instance.definition,
 };
 
 ApiResponse _$ApiResponseFromJson(Map<String, dynamic> json) => ApiResponse(
