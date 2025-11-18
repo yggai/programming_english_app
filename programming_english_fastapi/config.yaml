@@ -36,6 +36,16 @@ cors:
 logging:
   level: "INFO"
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+# 日志文件配置
+log_files:
+  app_log: "logs/app.log"
+  error_log: "logs/error.log"
+  access_log: "logs/access.log"
+  database_log: "logs/database.log"
+  max_size: "10 MB"
+  retention: "30 days"
+  compression: "zip"
 
 # 测试配置
 testing:
