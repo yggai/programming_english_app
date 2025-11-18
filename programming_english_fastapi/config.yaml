@@ -25,6 +25,13 @@ security:
   algorithm: "HS256"
   access_token_expire_minutes: 30
 
+# 超级用户配置
+superuser:
+  username: "admin"
+  email: "admin@programming-english.com"
+  password: "admin123456"
+  full_name: "Administrator"
+
 # CORS配置
 cors:
   allow_origins: ["*"]
