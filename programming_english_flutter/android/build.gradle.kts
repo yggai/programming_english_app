@@ -1,5 +1,11 @@
 allprojects {
     repositories {
+        // 添加阿里云镜像源
+        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        maven { url = uri("https://maven.aliyun.com/repository/central") }
+        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+        
+        // 官方源作为备选
         google()
         mavenCentral()
     }
