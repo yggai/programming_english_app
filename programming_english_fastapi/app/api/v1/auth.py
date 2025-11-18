@@ -8,11 +8,15 @@ from app.db.database import get_session
 from app.services.user_service import UserService
 from app.schemas.auth import LoginRequest, Token
 from app.utils.jwt_utils import create_user_token
+from app.utils.response_utils import (
+    success_response, error_response,
+    unauthorized_response
+)
 
 router = APIRouter()
 
 
-@router.post("/login", response_model=Token, status_code=status.HTTP_200_OK)
+@router.post("/login", response_model=dict)
 def login(login_data: LoginRequest, session: Session = Depends(get_session)):
     """
     用户登录
@@ -22,17 +26,11 @@ def login(login_data: LoginRequest, session: Session = Depends(get_session)):
         session: 数据库会话
         
     Returns:
-        Token: JWT访问令牌
-        
-    Raises:
-        HTTPException: 登录失败时返回401错误
+        dict: 统一格式的登录响应
     """
     # 验证输入
     if not login_data.username or not login_data.password:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户名或密码错误"
-        )
+        return unauthorized_response("用户名或密码不能为空")
     
     user_service = UserService(session)
     
@@ -46,36 +44,35 @@ def login(login_data: LoginRequest, session: Session = Depends(get_session)):
     # 验证用户存在且密码正确
     if not user or not user_service.verify_password(login_data.password, user.hashed_password):
         logger.warning(f"登录失败 - 用户名: {login_data.username}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户名或密码错误"
-        )
+        return unauthorized_response("用户名或密码错误")
     
     # 验证用户是否活跃
     if not user.is_active:
         logger.warning(f"非活跃用户尝试登录 - 用户名: {login_data.username}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="用户已被禁用"
-        )
+        return unauthorized_response("用户已被禁用")
     
     # 生成访问令牌
     access_token = create_user_token(user.id, user.username)
     
     logger.info(f"用户登录成功 - 用户名: {login_data.username}")
     
-    return {
-        "access_token": access_token,
-        "token_type": "bearer"
-    }
+    # 返回统一格式的成功响应
+    return success_response(
+        {
+            "access_token": access_token,
+            "token_type": "bearer"
+        },
+        "登录成功"
+    )
 
 
-@router.post("/logout", status_code=status.HTTP_200_OK)
+@router.post("/logout")
 def logout():
     """
     用户登出
     
-    Note: JWT是无状态的，实际的登出需要在客户端删除token
-    这里主要用于日志记录和可能的token黑名单功能
+    Returns:
+        dict: 统一格式的登出响应
     """
-    return {"message": "登出成功"}
+    logger.info("用户登出")
+    return success_response(None, "登出成功")
