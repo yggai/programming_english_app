@@ -16,8 +16,118 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2196F3),
+          brightness: Brightness.light,
+        ),
       ),
-      home: const HomePage(),
+      home: const MainNavigation(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
+}
+
+class MainNavigation extends StatefulWidget {
+  const MainNavigation({super.key});
+
+  @override
+  State<MainNavigation> createState() => _MainNavigationState();
+}
+
+class _MainNavigationState extends State<MainNavigation> {
+  int _currentIndex = 0;
+  
+  final List<Widget> _pages = [
+    const HomePage(),
+    const LearningPage(),
+    const ProgressPage(),
+    const ProfilePage(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedItemColor: const Color(0xFF2196F3),
+          unselectedItemColor: Colors.grey[600],
+          selectedLabelStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+          unselectedLabelStyle: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+          ),
+          items: [
+            BottomNavigationBarItem(
+              icon: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: const Icon(Icons.home_outlined, size: 24),
+              ),
+              activeIcon: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: const Icon(Icons.home, size: 24),
+              ),
+              label: '首页',
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: const Icon(Icons.school_outlined, size: 24),
+              ),
+              activeIcon: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: const Icon(Icons.school, size: 24),
+              ),
+              label: '学习',
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: const Icon(Icons.trending_up_outlined, size: 24),
+              ),
+              activeIcon: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: const Icon(Icons.trending_up, size: 24),
+              ),
+              label: '进度',
+            ),
+            BottomNavigationBarItem(
+              icon: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: const Icon(Icons.person_outline, size: 24),
+              ),
+              activeIcon: Container(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: const Icon(Icons.person, size: 24),
+              ),
+              label: '我的',
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -82,7 +192,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Programming English'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -146,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                                   style: const TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
+                                    color: Color(0xFF2196F3),
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -244,6 +355,138 @@ class _HomePageState extends State<HomePage> {
             child: const Text('关闭'),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class LearningPage extends StatelessWidget {
+  const LearningPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('学习'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.school,
+              size: 80,
+              color: Color(0xFF2196F3),
+            ),
+            SizedBox(height: 16),
+            Text(
+              '学习模块',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF2196F3),
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              '闪卡学习、测验模式等功能',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProgressPage extends StatelessWidget {
+  const ProgressPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('进度'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.trending_up,
+              size: 80,
+              color: Color(0xFF2196F3),
+            ),
+            SizedBox(height: 16),
+            Text(
+              '进度追踪',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF2196F3),
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              '学习统计、成就系统等功能',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('我的'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.person,
+              size: 80,
+              color: Color(0xFF2196F3),
+            ),
+            SizedBox(height: 16),
+            Text(
+              '个人中心',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF2196F3),
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              '用户设置、个人信息等功能',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
