@@ -25,12 +25,12 @@ class LoginPage extends StatelessWidget {
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const _AppLogo(),
-                  const SizedBox(height: 48),
-                  const LoginForm(),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _AppLogo(),
+              SizedBox(height: 48),
+              LoginForm(),
                 ],
               ),
             ),
@@ -46,19 +46,19 @@ class _AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        const Icon(
+        Icon(
           Icons.school,
           size: 64,
           color: AppColors.primary,
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Text(
           'Programming English',
-          style: AppTextStyles.heading1.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.heading1,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           '专业编程英语学习平台',
           style: AppTextStyles.bodyLarge,

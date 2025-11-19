@@ -3,8 +3,16 @@
 from fastapi import APIRouter
 from .auth import router as auth_router
 from .words import router as words_router
+from .health import router as health_router
 
 api_router = APIRouter()
+
+# 包含健康检查路由
+api_router.include_router(
+    health_router,
+    prefix="",
+    tags=["健康检查"]
+)
 
 # 包含认证路由
 api_router.include_router(

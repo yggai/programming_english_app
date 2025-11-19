@@ -14,8 +14,8 @@ from loguru import logger
 # 创建应用实例
 app = create_app()
 
-# 包含API路由
-app.include_router(api_router)
+# 包含API路由 - 添加正确的v1前缀
+app.include_router(api_router, prefix="/api/v1")
 
 # 创建数据库表并初始化超级用户
 create_db_and_tables()

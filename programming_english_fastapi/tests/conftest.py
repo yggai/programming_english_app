@@ -29,11 +29,10 @@ def setup_test_db():
 
 @pytest.fixture(scope="function")
 def db_session() -> Generator[Session, None, None]:
-    """创建测试数据库会话"""
+    """创建测试数据库会话（SQLModel Session，每个测试用事务隔离）"""
     connection = engine.connect()
     transaction = connection.begin()
-    session = TestingSessionLocal(bind=connection)
-    
+    session = Session(bind=connection)
     try:
         yield session
     finally:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import 'network_debug_info.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/validators.dart';
@@ -30,56 +31,58 @@ class _LoginFormState extends State<LoginForm> {
     final authProvider = context.watch<AuthProvider>();
 
     return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-        BoxShadow(
-          color: AppColors.primary.withValues(alpha: 0.1),
-          blurRadius: 20,
-          offset: const Offset(0, 10),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
-      ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                '欢迎回来',
-                style: AppTextStyles.heading2,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '请输入您的账号信息',
-                style: AppTextStyles.bodyMedium,
-              ),
-              const SizedBox(height: 32),
-              _UsernameInput(controller: _usernameController),
-              const SizedBox(height: 16),
-              _PasswordInput(
-                controller: _passwordController,
-                obscurePassword: _obscurePassword,
-                onToggleVisibility: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
-              if (authProvider.error != null) ...[
+        child: Padding(
+          padding: const EdgeInsets.all(32.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '欢迎回来',
+                  style: AppTextStyles.heading2,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  '请输入您的账号信息',
+                  style: AppTextStyles.bodyMedium,
+                ),
+                const SizedBox(height: 32),
+                _UsernameInput(controller: _usernameController),
                 const SizedBox(height: 16),
-                _ErrorMessage(message: authProvider.error!),
-              ],
-              const SizedBox(height: 24),
-              _LoginButton(
-                isLoading: authProvider.isLoading,
-                onPressed: () => _handleLogin(authProvider),
-              ),
-              const SizedBox(height: 24),
-              _HelpButton(),
+                _PasswordInput(
+                  controller: _passwordController,
+                  obscurePassword: _obscurePassword,
+                  onToggleVisibility: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
+                if (authProvider.error != null) ...[
+                  const SizedBox(height: 16),
+                  _ErrorMessage(message: authProvider.error!),
+                ],
+                const SizedBox(height: 24),
+                _LoginButton(
+                  isLoading: authProvider.isLoading,
+                  onPressed: () => _handleLogin(authProvider),
+                ),
+                const SizedBox(height: 24),
+                const NetworkDebugInfo(),
+                const SizedBox(height: 8),
+                _HelpButton(),
             ],
           ),
         ),

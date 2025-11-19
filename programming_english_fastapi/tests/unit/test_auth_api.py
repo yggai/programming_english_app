@@ -88,8 +88,8 @@ class TestAuthAPI:
         # Then: 验证登录失败
         assert response.status_code == 401
         data = response.json()
-        assert "detail" in data
-        assert "用户名或密码错误" in data["detail"]
+        assert data.get("code") == 401
+        assert "用户名或密码错误" in data.get("message", "")
     
     def test_login_nonexistent_user(self, client: TestClient):
         """测试不存在的用户登录"""
@@ -105,8 +105,8 @@ class TestAuthAPI:
         # Then: 验证登录失败
         assert response.status_code == 401
         data = response.json()
-        assert "detail" in data
-        assert "用户名或密码错误" in data["detail"]
+        assert data.get("code") == 401
+        assert "用户名或密码错误" in data.get("message", "")
     
     def test_login_missing_username(self, client: TestClient):
         """测试缺少用户名"""
@@ -148,8 +148,8 @@ class TestAuthAPI:
         # Then: 验证登录失败
         assert response.status_code == 401
         data = response.json()
-        assert "detail" in data
-        assert "用户名或密码错误" in data["detail"]
+        assert data.get("code") == 401
+        assert "用户名或密码错误" in data.get("message", "")
     
     def test_login_inactive_user(self, client: TestClient, user_service: UserService, test_user_data: dict):
         """测试非活跃用户登录"""
@@ -171,8 +171,8 @@ class TestAuthAPI:
         # Then: 验证登录失败
         assert response.status_code == 401
         data = response.json()
-        assert "detail" in data
-        assert "用户已被禁用" in data["detail"]
+        assert data.get("code") == 401
+        assert "用户已被禁用" in data.get("message", "")
     
     def test_login_unicode_password(self, client: TestClient, user_service: Session):
         """测试Unicode密码登录"""

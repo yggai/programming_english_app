@@ -3,8 +3,8 @@ class AppConstants {
   static const String appName = 'Programming English';
   static const String appVersion = '1.0.0';
   
-  // API配置
-  static const String baseUrl = 'http://localhost:8000';
+  // API配置 - 使用网络配置工具
+  static const String baseUrl = 'http://10.0.2.2:8000'; // Android模拟器
   static const Duration apiTimeout = Duration(seconds: 30);
   
   // 存储键名

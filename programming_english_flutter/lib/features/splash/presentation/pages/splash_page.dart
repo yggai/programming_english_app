@@ -27,22 +27,22 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.school,
               size: 80,
               color: AppColors.primary,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Text(
               'Programming English',
               style: AppTextStyles.heading1,
             ),
-            const SizedBox(height: 16),
-            const CircularProgressIndicator(
+            SizedBox(height: 16),
+            CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
             ),
           ],
