@@ -19,7 +19,7 @@ class _SplashPageState extends State<SplashPage> {
   void _navigateToNext() async {
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/main');
     }
   }
 
