@@ -1,29 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../../core/routes/app_routes.dart';
 
 class ProfileWidget extends StatelessWidget {
   const ProfileWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          _buildUserProfile(),
-          const SizedBox(height: 24),
-          _buildSettingsSection(),
-          const SizedBox(height: 24),
-          _buildStatisticsSection(),
-          const SizedBox(height: 24),
-          _buildLogoutButton(context),
-        ],
-      ),
+    return Consumer<AuthProvider>(
+      builder: (context, authProvider, child) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              _buildUserProfile(context),
+              const SizedBox(height: 24),
+              _buildSettingsSection(),
+              const SizedBox(height: 24),
+              _buildStatisticsSection(),
+              const SizedBox(height: 24),
+              _buildLogoutButton(context, authProvider),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildUserProfile() {
+  Widget _buildUserProfile(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final user = authProvider.user;
+    
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -45,25 +55,25 @@ class ProfileWidget extends StatelessWidget {
             child: Icon(Icons.person, size: 50, color: Colors.white),
           ),
           const SizedBox(height: 16),
-          Text('张三', style: AppTextStyles.heading3),
+          Text(user?.username ?? '用户', style: AppTextStyles.heading3),
           const SizedBox(height: 4),
-          Text('zhangsan@example.com', style: AppTextStyles.bodyMedium),
+          Text(user?.email ?? 'user@example.com', style: AppTextStyles.bodyMedium),
           const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              'VIP会员',
-              style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'VIP会员',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -178,12 +188,12 @@ class ProfileWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildLogoutButton(BuildContext context) {
+  Widget _buildLogoutButton(BuildContext context, AuthProvider authProvider) {
     return SizedBox(
       width: double.infinity,
       child: OutlinedButton(
         onPressed: () {
-          _showLogoutDialog(context);
+          _showLogoutDialog(context, authProvider);
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.error,
@@ -193,12 +203,21 @@ class ProfileWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text('退出登录'),
+        child: authProvider.isLoading 
+          ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+              ),
+            )
+          : const Text('退出登录'),
       ),
     );
   }
 
-  void _showLogoutDialog(BuildContext context) {
+  void _showLogoutDialog(BuildContext context, AuthProvider authProvider) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -213,10 +232,30 @@ class ProfileWidget extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: () {
-              // 执行退出登录逻辑
-              Navigator.pop(context);
-              // 这里可以导航到登录页面
+            onPressed: () async {
+              Navigator.pop(context); // 关闭对话框
+              
+              try {
+                await authProvider.logout();
+                
+                // 退出成功后跳转到登录页面
+                if (context.mounted) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    AppRoutes.login,
+                    (route) => false,
+                  );
+                }
+              } catch (e) {
+                // 处理退出登录错误
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('退出登录失败: $e'),
+                      backgroundColor: AppColors.error,
+                    ),
+                  );
+                }
+              }
             },
             child: const Text(
               '确定',

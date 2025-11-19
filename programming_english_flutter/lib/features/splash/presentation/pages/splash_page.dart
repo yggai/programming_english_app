@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/routes/app_routes.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -17,9 +20,26 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _navigateToNext() async {
+    // 等待至少2秒的启动画面
     await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      Navigator.pushReplacementNamed(context, '/main');
+    
+    if (!mounted) return;
+    
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    
+    // 等待认证状态初始化完成
+    while (!authProvider.isInitialized) {
+      await Future.delayed(const Duration(milliseconds: 100));
+    }
+    
+    if (!mounted) return;
+    
+    if (authProvider.isAuthenticated) {
+      // 已登录，跳转到主页面
+      Navigator.pushReplacementNamed(context, AppRoutes.main);
+    } else {
+      // 未登录，跳转到登录页面
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
     }
   }
 

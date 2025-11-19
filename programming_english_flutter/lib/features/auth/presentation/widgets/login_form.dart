@@ -5,6 +5,7 @@ import 'network_debug_info.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../core/routes/app_routes.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -98,7 +99,7 @@ class _LoginFormState extends State<LoginForm> {
       );
 
       if (success && mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, AppRoutes.main);
       }
     }
   }

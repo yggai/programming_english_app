@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/auth_models.dart';
 import '../../../../core/constants/app_constants.dart';
 
@@ -101,17 +102,32 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<String?> getToken() async {
-    // 实际项目中这里会从本地存储获取token
-    return null;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString('access_token');
+    } catch (e) {
+      debugPrint('获取token失败: $e');
+      return null;
+    }
   }
 
   @override
   Future<void> saveToken(String token) async {
-    // 实际项目中这里会保存token到本地存储
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('access_token', token);
+    } catch (e) {
+      debugPrint('保存token失败: $e');
+    }
   }
 
   @override
   Future<void> clearToken() async {
-    // 实际项目中这里会清除本地存储的token
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('access_token');
+    } catch (e) {
+      debugPrint('清除token失败: $e');
+    }
   }
 }
