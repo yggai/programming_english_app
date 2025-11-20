@@ -9,17 +9,16 @@ class TextToSpeechService {
 
   Future<void> initialize() async {
     _flutterTts = FlutterTts();
-    
-    // 设置语言为英语
-    await _flutterTts!.setLanguage("en-US");
-    
-    // 设置语速
+    await _flutterTts!.awaitSpeakCompletion(true);
+    try {
+      await _flutterTts!.setLanguage("en-US");
+      final availableUS = await _flutterTts!.isLanguageAvailable("en-US");
+      if (availableUS is bool && availableUS == false) {
+        await _flutterTts!.setLanguage("en-GB");
+      }
+    } catch (_) {}
     await _flutterTts!.setSpeechRate(0.5);
-    
-    // 设置音量
     await _flutterTts!.setVolume(1.0);
-    
-    // 设置音调
     await _flutterTts!.setPitch(1.0);
   }
 
@@ -27,10 +26,12 @@ class TextToSpeechService {
     if (_flutterTts == null) {
       await initialize();
     }
-    
-    if (text.isNotEmpty) {
-      await _flutterTts!.speak(text);
+    if (text.isEmpty) {
+      return;
     }
+    try {
+      await _flutterTts!.speak(text);
+    } catch (_) {}
   }
 
   Future<void> stop() async {
@@ -41,7 +42,12 @@ class TextToSpeechService {
 
   Future<void> setLanguage(String language) async {
     if (_flutterTts != null) {
-      await _flutterTts!.setLanguage(language);
+      try {
+        final available = await _flutterTts!.isLanguageAvailable(language);
+        if (available is bool && available) {
+          await _flutterTts!.setLanguage(language);
+        }
+      } catch (_) {}
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/services/text_to_speech_service.dart';
 
 class DashboardWidget extends StatelessWidget {
   const DashboardWidget({super.key});
@@ -176,7 +177,7 @@ class DashboardWidget extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.volume_up, color: AppColors.primary),
             onPressed: () {
-              // 播放发音
+              TextToSpeechService().speak(word);
             },
           ),
         ],
